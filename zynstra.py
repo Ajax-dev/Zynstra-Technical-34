@@ -14,17 +14,14 @@ class colours:
     UNDERLINE = '\033[4m'
     RESET = '\033[0m'
 
+
+## SETUP 
 api_candidate = '34'
 api_endpoint = 'http://weather-api.eba-jgjmjs6p.eu-west-2.elasticbeanstalk.com/api'
 
 api_cities = api_endpoint + '/cities'
 api_weather = api_endpoint + '/weather/%s' % api_candidate
-
-response_API_cities = requests.get(api_cities)
-print(response_API_cities.text)
-city_json = json.loads(response_API_cities.text)
-city_list = city_json['cities']
-print(type(city_list))
+day_list = ['monday' , 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 response_API_weather = requests.get(api_weather + '/edinburgh')
 # print(response_API_weather.text)
@@ -42,23 +39,24 @@ def run_program():
     q1time = 10
     q1day = 'wednesday'
     print('((Question 1)) The temperature in {} at {}:00 on {} is: '.format(q1city, q1time, q1day), end = ' ') 
-    print(colours.BOLD + str(get_temperature(q1city, q1time, q1day)) + colours.RESET)
+    print(colours.OKBLUE + colours.BOLD + str(get_temperature(q1city, q1time, q1day)) + colours.RESET)
 
     q2city = 'Edinburgh'
     q2day = 'FRIDAY'
     q2pressure = 1000
     print('((Question 2)) The pressure in {} on {} falls below {} millibars: '.format(q2city, q2day, q2pressure), end = ' ') 
-    print(get_pressure_below(q2city, q2pressure, q2day))
+    print(colours.OKBLUE + colours.BOLD + str(get_pressure_below(q2city, q2pressure, q2day)) + colours.RESET)
 
     q3city = 'CARDIFF'
     print('((Question 3)) The median temperature of the week in {} is: '.format(q3city), end= ' ')
-    print(get_median_temp(q3city))
+    print(colours.OKBLUE + colours.BOLD + str(get_median_temp(q3city)) + colours.RESET)
 
     print('((Question 4)) The highest wind speed recorded this week was in: ', end = ' ')
-    print(get_highest_wind())
+    print(colours.OKBLUE + colours.BOLD + str(get_highest_wind()) + colours.RESET)
 
     print('((Question 5)) It will snow in at least one of the cities this week: ', end = ' ')
-    print(snow_check())
+    print(str(snow_check()))
+    # print(colours.OKBLUE + colours.BOLD + str(snow_check()) + colours.RESET)
 
     return
 
@@ -103,11 +101,11 @@ def get_median_temp(city):
 
 def get_highest_wind():
     city = ''
-    cities = json.loads(requests.get(api_cities).text)
-    day_list = ['monday' , 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    
     # print(json.dumps(cities['cities'], indent=1))
     city_wind_speed = {} # create empty dict
     
+    cities = json.loads(requests.get(api_cities).text)
     cities = sorted(cities['cities'])
 
     for city in cities:
@@ -126,8 +124,19 @@ def get_highest_wind():
 
     return city
 
+# Checking to see if there is at least one city, that at one time from one day has a temp of < 2 and a precip value of > 1
 def snow_check():
+    is_snow = False
+    cities = json.loads(requests.get(api_cities).text)
 
-    return
+    for city in cities:
+        json_temp = json.loads(requests.get(api_weather + '/' + city.lower()).text)
+        for day in day_list:
+            for i in json_temp[day]:
+                print(type(i['temperature']))
+                # if (i['temperature'] < 2 & i['precipitation'] > 0):
+                #     is_snow = True
+
+    return False
 
 run_program()
