@@ -55,7 +55,7 @@ def run_program():
     print(colours.OKBLUE + colours.BOLD + str(get_highest_wind()) + colours.RESET)
 
     print('((Question 5)) It will snow in at least one of the cities this week: ', end = ' ')
-    print(str(snow_check()))
+    print(colours.OKBLUE + colours.BOLD + str(snow_check()) + colours.RESET)
     # print(colours.OKBLUE + colours.BOLD + str(snow_check()) + colours.RESET)
 
     return
@@ -128,15 +128,15 @@ def get_highest_wind():
 def snow_check():
     is_snow = False
     cities = json.loads(requests.get(api_cities).text)
+    cities = cities['cities']
 
     for city in cities:
         json_temp = json.loads(requests.get(api_weather + '/' + city.lower()).text)
         for day in day_list:
             for i in json_temp[day]:
-                print(type(i['temperature']))
-                # if (i['temperature'] < 2 & i['precipitation'] > 0):
-                #     is_snow = True
+                if (i['temperature'] < 2 & i['precipitation'] > 0):
+                    is_snow = True
 
-    return False
+    return is_snow
 
 run_program()
