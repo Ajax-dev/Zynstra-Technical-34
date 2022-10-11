@@ -26,8 +26,8 @@ day_list = ['monday' , 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
 response_API_weather = requests.get(api_weather + '/edinburgh')
 # print(response_API_weather.text)
 weather_json = json.loads(response_API_weather.text)
-print("Fri in edinburgh: ", json.dumps(weather_json['friday'][:2], indent=2))
-print(len(weather_json['friday']))
+# print("Fri in edinburgh: ", json.dumps(weather_json['friday'][:2], indent=2))
+# print(len(weather_json['friday']))
 
 def run_program():
     print('\n')
